@@ -13,10 +13,11 @@ docs_dir: docs
 nav:
   - Welcome: index.md
   - Code Reference:
-    - Realm:
-      - World: realm/world-reference.md
-    - Common:
-      - Decorators: common/decorators-reference.md
+    - mage:
+      - realm:
+        - world: mage/realm/world-reference.md
+      - common:
+        - decorators: mage/common/decorators-reference.md
 
 # Theme
 theme:
@@ -30,8 +31,8 @@ theme:
     - navigation.top
   palette:
     scheme: default
-    primary: white
-    accent: light blue
+    primary: black
+    accent: indigo
 
 # Plugins
 plugins:
