@@ -42,4 +42,4 @@ jobs:
         poetry run pytest
     - name: docs
       run: |
-        mkdocs gh-deploy --force
+        poetry run mkdocs gh-deploy --force
