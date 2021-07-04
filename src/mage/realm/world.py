@@ -34,7 +34,7 @@ from typing import Any, Dict
 
 from loguru import logger
 
-from common.decorators import timer, tracer
+from mage.common.decorators import timer, tracer
 
 
 class World:

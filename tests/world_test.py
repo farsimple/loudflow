@@ -27,7 +27,7 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from realm.world import World, WorldConfiguration
+from mage.realm.world import World, WorldConfiguration
 
 
 def test_constructor() -> None:
