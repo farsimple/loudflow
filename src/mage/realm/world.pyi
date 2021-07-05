@@ -27,16 +27,10 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from typing import Any, Dict
+from mage.realm.world_configuration import WorldConfiguration
 
 class World:
     def __init__(self, config: WorldConfiguration) -> None:
         self.config = None
         ...
     def hello(self) -> str: ...
-
-class WorldConfiguration:
-    name: str
-    @staticmethod
-    def build(config: Dict) -> WorldConfiguration: ...
-    def copy(self, **attributes: Any) -> WorldConfiguration: ...

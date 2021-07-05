@@ -27,23 +27,10 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from mage.realm.world import World
-from mage.realm.world_configuration import WorldConfiguration
+from typing import Any, Dict
 
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.config.name == name
-
-
-def test_hello() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.hello() == "Hello {}!".format(name)
+class WorldConfiguration:
+    name: str
+    @staticmethod
+    def build(config: Dict) -> WorldConfiguration: ...
+    def copy(self, **attributes: Any) -> WorldConfiguration: ...
