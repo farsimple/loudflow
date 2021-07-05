@@ -1,10 +1,10 @@
 #  ********************************************************************************
 #
-#     ____ ___  ____ _____ ____
-#    / __ `__ \/ __ `/ __ `/ _ \    A Multi-Agent
-#   / / / / / / /_/ / /_/ /  __/    Framework in Python
-#  /_/ /_/ /_/\__,_/\__, /\___/
-#                  /____/
+#      __                ________
+#     / /___  __  ______/ / __/ /___ _      __
+#    / / __ \/ / / / __  / /_/ / __ \ | /| / /      A Multi-Agent Framework
+#   / / /_/ / /_/ / /_/ / __/ / /_/ / |/ |/ /       in Python
+#  /_/\____/\__,_/\__,_/_/ /_/\____/|__/|__/
 #
 #  Copyright (c) 2021-2022 FarSimple Oy.
 #
@@ -34,7 +34,7 @@ from typing import Any, Dict
 
 from loguru import logger
 
-from mage.common.decorators import tracer
+from loudflow.common.decorators import tracer
 
 
 @dataclass(frozen=True)
@@ -69,7 +69,7 @@ class WorldConfiguration:
             config: Dictionary containing configuration data.
 
         Returns:
-            An instance of :py:class:`mage.realm.WorldConfiguration`.
+            An instance of :py:class:`loudflow.realm.WorldConfiguration`.
         """
         if config is None:
             message = "Missing required argument [config: Dict] in [World.build] method call."
@@ -100,7 +100,7 @@ class WorldConfiguration:
             **attributes: New configuration attributes.
 
         Returns:
-            An instance of :py:class:`mage.realm.WorldConfiguration`.
+            An instance of :py:class:`loudflow.realm.WorldConfiguration`.
         """
         name = str(attributes.get("name")) if "name" in attributes.keys() else self.name
         if name is None:

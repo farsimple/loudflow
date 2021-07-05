@@ -1,10 +1,10 @@
 #  ********************************************************************************
 #
-#     ____ ___  ____ _____ ____
-#    / __ `__ \/ __ `/ __ `/ _ \    A Multi-Agent
-#   / / / / / / /_/ / /_/ /  __/    Framework in Python
-#  /_/ /_/ /_/\__,_/\__, /\___/
-#                  /____/
+#      __                ________
+#     / /___  __  ______/ / __/ /___ _      __
+#    / / __ \/ / / / __  / /_/ / __ \ | /| / /      A Multi-Agent Framework
+#   / / /_/ / /_/ / /_/ / __/ / /_/ / |/ |/ /       in Python
+#  /_/\____/\__,_/\__,_/_/ /_/\____/|__/|__/
 #
 #  Copyright (c) 2021-2022 FarSimple Oy.
 #
@@ -27,8 +27,8 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from mage.realm.world import World
-from mage.realm.world_configuration import WorldConfiguration
+from loudflow.realm.world import World
+from loudflow.realm.world_configuration import WorldConfiguration
 
 
 def test_constructor() -> None:

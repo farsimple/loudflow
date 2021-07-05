@@ -1,10 +1,10 @@
 #  ********************************************************************************
 #
-#     ____ ___  ____ _____ ____
-#    / __ `__ \/ __ `/ __ `/ _ \    A Multi-Agent
-#   / / / / / / /_/ / /_/ /  __/    Framework in Python
-#  /_/ /_/ /_/\__,_/\__, /\___/
-#                  /____/
+#      __                ________
+#     / /___  __  ______/ / __/ /___ _      __
+#    / / __ \/ / / / __  / /_/ / __ \ | /| / /      A Multi-Agent Framework
+#   / / /_/ / /_/ / /_/ / __/ / /_/ / |/ |/ /       in Python
+#  /_/\____/\__,_/\__,_/_/ /_/\____/|__/|__/
 #
 #  Copyright (c) 2021-2022 FarSimple Oy.
 #
@@ -31,8 +31,8 @@ from __future__ import annotations
 
 from loguru import logger
 
-from mage.common.decorators import timer, tracer
-from mage.realm.world_configuration import WorldConfiguration
+from loudflow.common.decorators import timer, tracer
+from loudflow.realm.world_configuration import WorldConfiguration
 
 
 class World:

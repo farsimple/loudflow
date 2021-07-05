@@ -1,2 +1,2 @@
-# mage
+# loudflow
 Multi-agent system framework

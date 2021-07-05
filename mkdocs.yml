@@ -1,11 +1,11 @@
 # Project information
-site_name: Mage
-site_url: https://farsimple.github.io/mage
+site_name: loudflow
+site_url: https://farsimple.com/loudflow
 site_author: Sinan Inel
 
 # Repository
-repo_name: farsimple/mage
-repo_url: https://github.com/farsimple/mage
+repo_name: farsimple/loudflow
+repo_url: https://github.com/farsimple/loudflow
 edit_uri: edit/master/docs
 docs_dir: docs
 
@@ -13,11 +13,11 @@ docs_dir: docs
 nav:
   - Welcome: index.md
   - Code Reference:
-    - mage:
+    - loudflow:
       - realm:
-        - world: mage/realm/world-reference.md
+        - world: loudflow/realm/world-reference.md
       - common:
-        - decorators: mage/common/decorators-reference.md
+        - decorators: loudflow/common/decorators-reference.md
 
 # Theme
 theme:
