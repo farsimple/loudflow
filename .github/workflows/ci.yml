@@ -21,6 +21,7 @@ jobs:
         echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
     - name: dependencies
       run: |
+        sudo apt-get install libsdl2-dev
         poetry install
     - name: flake8
       run: |
@@ -39,7 +40,6 @@ jobs:
         poetry run mypy src
     - name: tox
       run: |
-        sudo apt-get install libsdl2-dev
         poetry run tox
     - name: docs
       run: |
