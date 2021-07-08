@@ -73,6 +73,6 @@ class Action(ABC):
             **attributes: New action attributes.
 
         Returns:
-            An instance of Any.
+            An instance of `loudflow.realm.action.action.Action`.
         """
         pass

@@ -124,7 +124,7 @@ class ThingConfiguration:
             config: Dictionary containing configuration data.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.thing.ThingConfiguration`.
+            An instance of `loudflow.realm.thing.ThingConfiguration`.
         """
         if config is None:
             message = "Missing required argument [config: Dict] in [ThingConfiguration.build] method call."
@@ -151,7 +151,7 @@ class ThingConfiguration:
             **attributes: New configuration attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.thing.ThingConfiguration`.
+            An instance of `loudflow.realm.thing.ThingConfiguration`.
         """
         name = attributes.get("name", None) if "name" in attributes.keys() else self.name
         symbol = attributes.get("symbol", None) if "symbol" in attributes.keys() else self.symbol

@@ -83,7 +83,7 @@ class Move(Action):
             **attributes: New Move attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.action.move.Move`.
+            An instance of `loudflow.realm.action.move.Move`.
         """
         actor = attributes.get("actor", None) if "actor" in attributes.keys() else self.actor
         target = attributes.get("target", None) if "target" in attributes.keys() else self.target

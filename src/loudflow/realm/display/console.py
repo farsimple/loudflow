@@ -176,7 +176,7 @@ class ConsoleConfiguration(DisplayConfiguration):
             config: Dictionary containing configuration data.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.display.console.ConsoleConfiguration`.
+            An instance of `loudflow.realm.display.console.ConsoleConfiguration`.
         """
         if config is None:
             message = "Missing required argument [config: Dict] in [ConsoleConfiguration.build] method call."
@@ -199,7 +199,7 @@ class ConsoleConfiguration(DisplayConfiguration):
             **attributes: New configuration attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.display.console.ConsoleConfiguration`.
+            An instance of `loudflow.realm.display.console.ConsoleConfiguration`.
         """
         tileset = attributes.get("tileset", None) if "tileset" in attributes.keys() else self.tileset
         manual_agent = (

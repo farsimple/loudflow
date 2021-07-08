@@ -72,7 +72,7 @@ class ActionEvent(Event):
             **attributes: New action event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.action_event.ActionEvent`.
+            An instance of `loudflow.realm.event.action_event.ActionEvent`.
         """
         action = attributes.get("action", None) if "action" in attributes.keys() else self.action
         # noinspection PyArgumentList
@@ -112,7 +112,7 @@ class ActionDoneEvent(Event):
             **attributes: New action done event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.action_event.ActionDoneEvent`.
+            An instance of `loudflow.realm.event.action_event.ActionDoneEvent`.
         """
         source_id = attributes.get("source_id", None) if "source_id" in attributes.keys() else self.source_id
         # noinspection PyArgumentList
@@ -152,7 +152,7 @@ class ActionFailedEvent(Event):
             **attributes: New action failed event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.action_event.ActionFailedEvent`.
+            An instance of `loudflow.realm.event.action_event.ActionFailedEvent`.
         """
         source_id = attributes.get("source_id", None) if "source_id" in attributes.keys() else self.source_id
         # noinspection PyArgumentList

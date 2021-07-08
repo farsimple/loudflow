@@ -88,7 +88,7 @@ class Change:
             **attributes: New change attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.display.change.Change`.
+            An instance of `loudflow.realm.display.change.Change`.
         """
         thing_id = attributes.get("thing_id", None) if "thing_id" in attributes.keys() else self.thing_id
         x = attributes.get("x", None) if "x" in attributes.keys() else self.x

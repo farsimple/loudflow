@@ -160,7 +160,7 @@ class WorldConfiguration:
             config: Dictionary containing configuration data.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.world.world.WorldConfiguration`.
+            An instance of `loudflow.realm.world.world.WorldConfiguration`.
         """
         if config is None:
             message = "Missing required argument [config: Dict] in [WorldConfiguration.build] method call."
@@ -184,7 +184,7 @@ class WorldConfiguration:
             **attributes: New configuration attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.world.world.WorldConfiguration`.
+            An instance of `loudflow.realm.world.world.WorldConfiguration`.
         """
         name = attributes.get("name", None) if "name" in attributes.keys() else self.name
         width = attributes.get("width", None) if "width" in attributes.keys() else self.width

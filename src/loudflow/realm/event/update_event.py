@@ -71,7 +71,7 @@ class UpdateEvent(Event):
             **attributes: New UpdateEvent attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.update_event.UpdateEvent`.
+            An instance of `loudflow.realm.event.update_event.UpdateEvent`.
         """
         change = attributes.get("change", None) if "change" in attributes.keys() else self.change
         # noinspection PyArgumentList
@@ -111,7 +111,7 @@ class UpdateDoneEvent(Event):
             **attributes: New action done event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.update_event.UpdateDoneEvent`.
+            An instance of `loudflow.realm.event.update_event.UpdateDoneEvent`.
         """
         source_id = attributes.get("source_id", None) if "source_id" in attributes.keys() else self.source_id
         # noinspection PyArgumentList
@@ -151,7 +151,7 @@ class UpdateFailedEvent(Event):
             **attributes: New action failed event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.update_event.UpdateFailedEvent`.
+            An instance of `loudflow.realm.event.update_event.UpdateFailedEvent`.
         """
         source_id = attributes.get("source_id", None) if "source_id" in attributes.keys() else self.source_id
         # noinspection PyArgumentList

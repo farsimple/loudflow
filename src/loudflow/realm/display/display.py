@@ -101,7 +101,7 @@ class DisplayConfiguration(ABC):
             config: Dictionary containing configuration data.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.display.display.DisplayConfiguration`.
+            An instance of `loudflow.realm.display.display.DisplayConfiguration`.
         """
         pass
 
@@ -114,6 +114,6 @@ class DisplayConfiguration(ABC):
             **attributes: New configuration attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.display.display.DisplayConfiguration`.
+            An instance of `loudflow.realm.display.display.DisplayConfiguration`.
         """
         pass

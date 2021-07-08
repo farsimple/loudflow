@@ -55,6 +55,6 @@ class Event(ABC):
             **attributes: New Event attributes.
 
         Returns:
-            An instance of :py:class:`loudflow.realm.event.event.Event`.
+            An instance of `loudflow.realm.event.event.Event`.
         """
         pass

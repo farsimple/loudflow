@@ -6,4 +6,4 @@
 
 ### Function: timer
 
-::: loudflow.common.decorators.time
+::: loudflow.common.decorators.timer
