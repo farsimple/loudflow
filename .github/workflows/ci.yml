@@ -39,6 +39,7 @@ jobs:
         poetry run mypy src
     - name: tox
       run: |
+        sudo apt-get install libsdl2-dev
         poetry run tox
     - name: docs
       run: |

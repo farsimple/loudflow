@@ -29,14 +29,9 @@ mkdocs = "^1.2.1"
 mkdocs-material-extensions = "^1.0.1"
 mkdocs-git-revision-date-plugin = "^0.3.1"
 mkdocstrings = "^0.15.2"
-tox-poetry = "^0.4.0"
 
 [tool.black]
 line-length = 120
-
-[tool.flakehell]
-max_line_length = 120
-extended_default_ignore=[]
 
 [tool.isort]
 profile = "black"
