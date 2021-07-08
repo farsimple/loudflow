@@ -27,13 +27,34 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from loudflow.realm.world.world import World, WorldConfiguration
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass, field
+from typing import Any
+from uuid import uuid4
 
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.config.name == name
+@dataclass(frozen=True)  # type: ignore
+class Event(ABC):
+    """Event class.
+
+    Immutable dataclass for event data.
+    """
+
+    id: str = field(init=False)
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "id", str(uuid4()))
+
+    @abstractmethod
+    def copy(self, **attributes: Any) -> Event:
+        """Copy Event state while replacing attributes with new values, and return new immutable instance.
+
+        Args:
+            **attributes: New Event attributes.
+
+        Returns:
+            An instance of :py:class:`loudflow.realm.event.event.Event`.
+        """
+        pass

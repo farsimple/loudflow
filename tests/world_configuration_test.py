@@ -27,7 +27,7 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from loudflow.realm.world_configuration import WorldConfiguration
+from loudflow.realm.world.world import WorldConfiguration
 
 
 def test_constructor() -> None:

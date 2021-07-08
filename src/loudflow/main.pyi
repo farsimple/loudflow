@@ -27,13 +27,4 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from loudflow.realm.world.world import World, WorldConfiguration
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.config.name == name
+def main() -> None: ...

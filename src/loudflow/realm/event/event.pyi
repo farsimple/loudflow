@@ -27,10 +27,11 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from typing import Any, Dict
+from dataclasses import dataclass
+from typing import Any
 
-class WorldConfiguration:
-    name: str
-    @staticmethod
-    def build(config: Dict) -> WorldConfiguration: ...
-    def copy(self, **attributes: Any) -> WorldConfiguration: ...
+@dataclass(frozen=True)
+class Event:
+    id: str
+    def __post_init__(self) -> None: ...
+    def copy(self, **attributes: Any) -> Event: ...

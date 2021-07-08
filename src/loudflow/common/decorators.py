@@ -36,7 +36,7 @@ from typing import Any, Callable
 from loguru import logger
 
 
-def tracer(*, log_entry: bool = True, log_exit: bool = True, level: str = "TRACE") -> Any:
+def trace(*, log_entry: bool = True, log_exit: bool = True, level: str = "TRACE") -> Any:
     """Decorator for tracing entry to and exit from a function.
 
     Args:

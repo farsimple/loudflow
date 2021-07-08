@@ -27,13 +27,26 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from loudflow.realm.world.world import World, WorldConfiguration
+from dataclasses import dataclass
+from typing import Any, Generic, TypeVar
 
+Action = TypeVar("Action")
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.config.name == name
+@dataclass(frozen=True)
+class ActionEvent(Generic[Action]):
+    id: str = ...
+    action: Any = ...
+    def __post_init__(self) -> None: ...
+    def copy(self, **attributes: Any) -> ActionEvent: ...
+
+@dataclass(frozen=True)
+class ActionDoneEvent:
+    source_id: str = ...
+    def __post_init__(self) -> None: ...
+    def copy(self, **attributes: Any) -> ActionDoneEvent: ...
+
+@dataclass(frozen=True)
+class ActionFailedEvent:
+    source_id: str = ...
+    def __post_init__(self) -> None: ...
+    def copy(self, **attributes: Any) -> ActionFailedEvent: ...

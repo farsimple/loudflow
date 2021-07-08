@@ -27,36 +27,15 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from __future__ import annotations
-
-from loguru import logger
-
-from loudflow.common.decorators import timer, tracer
-from loudflow.realm.world_configuration import WorldConfiguration
+from loudflow.realm.realm import Realm
+from loudflow.realm.world.world import WorldConfiguration
 
 
-class World:
-    """World class.
+def main() -> None:
+    config = WorldConfiguration(name="test")
+    realm = Realm(config)
+    realm.run()
 
-    The world in which the agent(s) act.
 
-    Attributes:
-        config: World configuration data.
-
-    """
-
-    @tracer()
-    def __init__(self, config: WorldConfiguration) -> None:
-        logger.info("Constructing world...")
-        self.config = config
-
-    @tracer()
-    @timer()
-    def hello(self) -> str:
-        """Returns hello world string.
-
-        Returns:
-            Hello message using world name.
-
-        """
-        return "Hello {}!".format(self.config.name)
+if __name__ == "__main__":
+    main()

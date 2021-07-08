@@ -27,13 +27,52 @@
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
 
-from loudflow.realm.world.world import World, WorldConfiguration
+from __future__ import annotations
+
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from typing import Any, Optional
+
+from loguru import logger
 
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = WorldConfiguration(name=name)
-    world = World(config)
-    assert world.config.name == name
+@dataclass(frozen=True)  # type: ignore
+class Action(ABC):
+    """Action class.
+
+    Immutable dataclass describing action.
+
+    Attributes:
+    actor: Identifier of thing which is acting.
+    target: Identifier of thing which is acted on. Use None, if nothing is acted on.
+
+    """
+
+    actor: str
+    target: Optional[str]
+
+    def __post_init__(self) -> None:
+        if self.actor is None:
+            message = "Missing required attribute [actor: str] in Action."
+            logger.error(message)
+            raise ValueError(message)
+        if not isinstance(self.actor, str):
+            message = "Invalid type for attribute [actor: str] in Action."
+            logger.error(message)
+            raise ValueError(message)
+        if self.target is not None and not isinstance(self.target, str):
+            message = "Invalid type for attribute [target: str] in Action."
+            logger.error(message)
+            raise ValueError(message)
+
+    @abstractmethod
+    def copy(self, **attributes: Any) -> Action:
+        """Copy Action state while replacing attributes with new values, and return new immutable instance.
+
+        Args:
+            **attributes: New action attributes.
+
+        Returns:
+            An instance of Any.
+        """
+        pass
