@@ -29,54 +29,29 @@
 
 from __future__ import annotations
 
-from typing import Any
-
 from loguru import logger
-from pydispatch import dispatcher
 
-from loudflow.common.decorators import timer, trace
+from loudflow.common.decorators import trace
 from loudflow.realm.display.console import Console, ConsoleConfiguration
-from loudflow.realm.event.update_event import UpdateEvent
-from loudflow.realm.thing.thing import Thing, ThingConfiguration
-from loudflow.realm.world.world import World, WorldConfiguration
+from loudflow.realm.world.tile_world import TileWorld, TileWorldConfiguration
 
 
 class Realm:
     """Realm class.
 
     The realm in which the agent(s) act.
-
-    Attributes:
-        config: World configuration data.
-
     """
 
     @trace()
-    def __init__(self, config: WorldConfiguration) -> None:
+    def __init__(self) -> None:
         logger.info("Constructing realm...")
-        self.config = config
-        self.world = World(config)
-        logger.info(self.world.width)
-        thing_config = ThingConfiguration("thingy", "A", int(self.world.width / 2), int(self.world.height / 2))
-        thing = Thing(thing_config)
-        self.world.add(thing)
-        display_config = ConsoleConfiguration(manual_agent=thing.id)
+        super().__init__()
+        config = TileWorldConfiguration(name="test", width=80, height=50, obstacles=0.05, holes=0.001)
+        self.world = TileWorld(config)
+        display_config = ConsoleConfiguration(player=self.world.player.id)
         self.display = Console(self.world, display_config)
-        dispatcher.connect(self.update_handler, signal=UpdateEvent.__name__, sender=dispatcher.Any)
 
     @trace()
     def run(self) -> None:
+        self.world.start()
         self.display.show()
-
-    @trace()
-    @timer()
-    def update_handler(self, signal: Any, sender: Any, event: UpdateEvent) -> None:
-        """Handles update events.
-
-        Args:
-            signal: Event signal.
-            sender: Event sender.
-            event: Update event.
-
-        """
-        self.display.update(event.change)

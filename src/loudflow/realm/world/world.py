@@ -29,12 +29,14 @@
 
 from __future__ import annotations
 
+from abc import abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from uuid import uuid4
 
 from loguru import logger
-from pydispatch import dispatcher
+from rx.core import Observer
+from rx.subject import Subject
 
 from loudflow.common.decorators import timer, trace
 from loudflow.realm.display.change import Change
@@ -43,7 +45,7 @@ from loudflow.realm.event.update_event import UpdateEvent
 from loudflow.realm.thing.thing import Thing
 
 
-class World:
+class World(Observer):
     """World class.
 
     The world in which the agent(s) act.
@@ -56,23 +58,56 @@ class World:
     @trace()
     def __init__(self, config: WorldConfiguration) -> None:
         logger.info("Constructing world...")
+        super().__init__()
         self.id = str(uuid4())
         self.config = config
         self.name = config.name
         self.width = config.width
         self.height = config.height
         self.things: Dict[str, Thing] = {}
-        dispatcher.connect(self.action_handler, signal=ActionEvent.__name__, sender=dispatcher.Any)
+        self.events = Subject()
+        self.actions = Subject()
+        self.subscription = None
+
+    @abstractmethod
+    def start(self) -> None:
+        pass
+
+    @abstractmethod
+    def stop(self) -> None:
+        pass
+
+    @abstractmethod
+    def destroy(self) -> None:
+        pass
 
     @trace()
-    def add(self, thing: Thing) -> None:
+    def add(self, thing: Thing, replace: bool = True, silent: bool = True) -> bool:
         """Add thing to world.
 
         Args:
             thing: Thing.
+            replace: If True, replace existing tile. If False, log warning.
+            silent: If True, do not log warnings.
 
+        Returns:
+            True if thing is added, False if not.
         """
-        self.things[thing.id] = thing
+        if replace:
+            self.things[thing.id] = thing
+            return True
+        else:
+            check = self.things.get(thing.id, None)
+            if check is None:
+                self.things[thing.id] = thing
+                return True
+            else:
+                if not silent:
+                    logger.warning(
+                        "Cannot place thing [{}] in world [{}] "
+                        "because thing[{}] is already placed in that location.".format(thing.id, self.id, check.id)
+                    )
+            return False
 
     @trace()
     def remove(self, thing_id: str) -> None:
@@ -85,34 +120,44 @@ class World:
         del self.things[thing_id]
 
     @trace()
+    def move(self, thing_id: str, x: int, y: int) -> None:
+        """Move thing.
+
+        Args:
+            thing_id: Thing identifier.
+            x: Incremental movement in x-direction.
+            y: Incremental movement in y-direction.
+
+        """
+        thing = self.things.get(thing_id, None)
+        if thing is None:
+            message = "Cannot find thing [{}] in world [{}].".format(thing_id, self.id)
+            logger.error(message)
+            raise ValueError(message)
+        thing.x += x
+        thing.y += y
+        change = Change(thing.id, thing.x, thing.y)
+        self.events.on_next(UpdateEvent(change=change))
+
+    @trace()
     @timer()
-    def action_handler(self, signal: Any, sender: Any, event: ActionEvent) -> None:
+    def on_next(self, event: ActionEvent) -> None:
         """Handles action events.
 
         Args:
-            signal: Action event signal.
-            sender: Action event sender.
             event: Action event.
 
         """
         if event.action.__class__.__name__ == "Move":
-            thing = self.things.get(event.action.actor, None)
-            if thing is None:
-                message = "Cannot find thing [{}] in world [{}].".format(event.action.actor, self.id)
-                logger.error(message)
-                raise ValueError(message)
-            thing.x += event.action.x
-            thing.y += event.action.y
-            dispatcher.send(signal=ActionDoneEvent.__name__, event=ActionDoneEvent(event.id))
-            change = Change(thing.id, thing.x, thing.y)
-            dispatcher.send(signal=UpdateEvent.__name__, event=UpdateEvent(change=change))
+            self.move(event.action.actor, event.action.x, event.action.y)
+            self.events.on_next(ActionDoneEvent(event.id))
         else:
             message = "Invalid action specified in action event."
             logger.error(message)
             raise ValueError(message)
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True)  # type: ignore
 class WorldConfiguration:
     """World configuration class.
 
@@ -126,8 +171,8 @@ class WorldConfiguration:
     """
 
     name: str
-    width: int = 80
-    height: int = 50
+    width: Optional[int]
+    height: Optional[int]
 
     def __post_init__(self) -> None:
         if self.name is None:
@@ -152,7 +197,7 @@ class WorldConfiguration:
             raise ValueError(message)
 
     @staticmethod
-    @trace()
+    @abstractmethod
     def build(config: Dict) -> WorldConfiguration:
         """Build WorldConfiguration from dictionary of configuration data.
 
@@ -162,21 +207,9 @@ class WorldConfiguration:
         Returns:
             An instance of `loudflow.realm.world.world.WorldConfiguration`.
         """
-        if config is None:
-            message = "Missing required argument [config: Dict] in [WorldConfiguration.build] method call."
-            logger.error(message)
-            raise ValueError(message)
-        if not isinstance(config, Dict):
-            message = "Invalid argument type: [config: Dict] must be Dict in [WorldConfiguration.build] method call."
-            logger.error(message)
-            raise TypeError(message)
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return WorldConfiguration(
-            name=config.get("name", None), width=config.get("width", None), height=config.get("height", None)
-        )
+        pass
 
-    @trace()
+    @abstractmethod
     def copy(self, **attributes: Any) -> WorldConfiguration:
         """Copy WorldConfiguration state while replacing attributes with new values, and return new immutable instance.
 
@@ -186,9 +219,4 @@ class WorldConfiguration:
         Returns:
             An instance of `loudflow.realm.world.world.WorldConfiguration`.
         """
-        name = attributes.get("name", None) if "name" in attributes.keys() else self.name
-        width = attributes.get("width", None) if "width" in attributes.keys() else self.width
-        height = attributes.get("height", None) if "height" in attributes.keys() else self.height
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return WorldConfiguration(name=name, width=width, height=height)
+        pass

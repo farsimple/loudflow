@@ -34,7 +34,6 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from loguru import logger
-from pydispatch import dispatcher
 import tcod
 
 from loudflow.common.decorators import trace
@@ -61,9 +60,9 @@ class Console(Display):
         super().__init__(world, config)
         path = Path(__file__).parent / config.tileset
         self.tileset = tcod.tileset.load_tilesheet(path, 32, 8, tcod.tileset.CHARMAP_TCOD)
-        self.manual_agent = world.things.get(config.manual_agent, None)
-        if self.manual_agent is None:
-            message = "Thing [{}] cannot be found in world [{}].".format(config.manual_agent, world.id)
+        self.player = world.things.get(config.player, None)
+        if self.player is None:
+            message = "Thing [{}] cannot be found in world [{}].".format(config.player, world.id)
             logger.error(message)
             raise ValueError(message)
         self.context = tcod.context.new(
@@ -74,7 +73,7 @@ class Console(Display):
             vsync=True,
         )
         self.view = tcod.Console(self.world.width, self.world.height, order="F")
-        self.view.print(x=self.manual_agent.x, y=self.manual_agent.y, string=self.manual_agent.symbol)
+        self._render()
 
     @trace()
     def event_handler(self, event: tcod.event.T) -> None:
@@ -87,32 +86,24 @@ class Console(Display):
         if event.type == "QUIT":
             self.context.close()
             raise SystemExit()
-        if self.manual_agent is not None:
+        if self.player is not None:
             if event.type == "KEYDOWN":
                 key = event.sym
                 if key == tcod.event.K_UP:
-                    dispatcher.send(
-                        signal=ActionEvent.__name__, event=ActionEvent(action=Move(self.manual_agent.id, None, 0, -1))
-                    )
+                    self.world.actions.on_next(ActionEvent(action=Move(self.player.id, None, 0, -1)))
                 elif key == tcod.event.K_DOWN:
-                    dispatcher.send(
-                        signal=ActionEvent.__name__, event=ActionEvent(action=Move(self.manual_agent.id, None, 0, 1))
-                    )
+                    self.world.actions.on_next(ActionEvent(action=Move(self.player.id, None, 0, 1)))
                 elif key == tcod.event.K_LEFT:
-                    dispatcher.send(
-                        signal=ActionEvent.__name__, event=ActionEvent(action=Move(self.manual_agent.id, None, -1, 0))
-                    )
+                    self.world.actions.on_next(ActionEvent(action=Move(self.player.id, None, -1, 0)))
                 elif key == tcod.event.K_RIGHT:
-                    dispatcher.send(
-                        signal=ActionEvent.__name__, event=ActionEvent(action=Move(self.manual_agent.id, None, 1, 0))
-                    )
+                    self.world.actions.on_next(ActionEvent(action=Move(self.player.id, None, 1, 0)))
                 elif key == tcod.event.K_ESCAPE:
                     pass
 
     @trace()
     def show(self) -> None:
         """Show world in the display."""
-        self.context.present(self.view)
+        super().show()
         while True:
             for event in tcod.event.wait():
                 self.context.convert_event(event)
@@ -120,21 +111,30 @@ class Console(Display):
 
     @trace()
     def update(self, change: Change) -> None:
-        """Update display.
+        """Update world state and display.
 
         Args:
             change: Change.
 
         """
-        self.view.clear()
         thing = self.world.things.get(change.thing_id, None)
         if thing is not None:
-            self.view.print(x=change.x, y=change.y, string=thing.symbol)
+            thing.x = change.x
+            thing.y = change.y
+            self.world.add(thing)
         else:
-            message = "Display cannot be updated because thing [{}] cannot be found in world [{}].".format(
+            message = "World cannot be updated because thing [{}] cannot be found in world [{}].".format(
                 change.thing_id, self.world.id
             )
             logger.warning(message)
+        self._render()
+
+    @trace()
+    def _render(self) -> None:
+        """Render world in the display."""
+        self.view.clear()
+        for thing in self.world.things.values():
+            self.view.print(x=thing.x, y=thing.y, string=thing.char, fg=thing.color)
         self.context.present(self.view)
 
 
@@ -146,12 +146,12 @@ class ConsoleConfiguration(DisplayConfiguration):
 
     Attributes:
     tileset: Name of file containing tileset.
-    manual_agent: True if display is user interactive, otherwise False.
+    player: True if display is user interactive, otherwise False.
 
     """
 
     tileset: str = "dejavu10x10_gs_tc.png"
-    manual_agent: Optional[str] = None
+    player: Optional[str] = None
 
     def __post_init__(self) -> None:
         if self.tileset is None:
@@ -162,8 +162,8 @@ class ConsoleConfiguration(DisplayConfiguration):
             message = "Invalid type for attribute [tileset: str] in DisplayConfiguration."
             logger.error(message)
             raise ValueError(message)
-        if self.manual_agent is not None and not isinstance(self.manual_agent, str):
-            message = "Invalid type for attribute [manual_agent: str] in DisplayConfiguration."
+        if self.player is not None and not isinstance(self.player, str):
+            message = "Invalid type for attribute [player: str] in DisplayConfiguration."
             logger.error(message)
             raise ValueError(message)
 
@@ -188,7 +188,7 @@ class ConsoleConfiguration(DisplayConfiguration):
             raise TypeError(message)
         # noinspection PyArgumentList
         # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return ConsoleConfiguration(tileset=config.get("tileset", None), manual_agent=config.get("manual_agent", None))
+        return ConsoleConfiguration(tileset=config.get("tileset", None), player=config.get("player", None))
 
     @trace()
     def copy(self, **attributes: Any) -> ConsoleConfiguration:
@@ -202,9 +202,7 @@ class ConsoleConfiguration(DisplayConfiguration):
             An instance of `loudflow.realm.display.console.ConsoleConfiguration`.
         """
         tileset = attributes.get("tileset", None) if "tileset" in attributes.keys() else self.tileset
-        manual_agent = (
-            attributes.get("manual_agent", None) if "manual_agent" in attributes.keys() else self.manual_agent
-        )
+        player = attributes.get("player", None) if "player" in attributes.keys() else self.player
         # noinspection PyArgumentList
         # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return ConsoleConfiguration(tileset=tileset, manual_agent=manual_agent)
+        return ConsoleConfiguration(tileset=tileset, player=player)

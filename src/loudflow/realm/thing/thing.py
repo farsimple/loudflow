@@ -30,7 +30,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 from uuid import uuid4
 
 from loguru import logger
@@ -50,11 +50,11 @@ class Thing:
 
     @trace()
     def __init__(self, config: ThingConfiguration) -> None:
-        logger.info("Constructing thing...")
         self.id = str(uuid4())
         self.config = config
         self.name = config.name
-        self.symbol = config.symbol
+        self.char = config.char
+        self.color = config.color
         self.x = config.x
         self.y = config.y
 
@@ -67,58 +67,83 @@ class ThingConfiguration:
 
     Attributes:
     name: Thing name.
+    char: Character representing thing in console.
+    color: Color of character representing thing in console.
     x: X-coordinate of initial location of thing.
     y: Y-coordinate of initial location of thing.
 
     """
 
     name: str
-    symbol: str
+    char: str
+    color: Tuple[int, int, int]
     x: int
     y: int
 
     def __post_init__(self) -> None:
         if self.name is None:
-            message = "Missing required attribute [name: str] in thing configuration."
+            message = "Missing required attribute [name: str] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(self.name, str):
-            message = "Invalid type for attribute [name: str] in thing configuration."
+            message = "Invalid type for attribute [name: str] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
-        if self.symbol is None:
-            message = "Missing required attribute [symbol: str] in thing configuration."
+        if self.char is None:
+            message = "Missing required attribute [char: str] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
-        if not isinstance(self.symbol, str):
-            message = "Invalid type for attribute [symbol: str] in thing configuration."
+        if not isinstance(self.char, str):
+            message = "Invalid type for attribute [char: str] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
-        if len(self.symbol) > 1:
-            message = "Invalid attribute [symbol: str] in thing configuration. Symbol must be a single character."
+        if len(self.char) > 1:
+            message = "Invalid attribute [char: str] in ThingConfiguration. [char: str] must be a single character."
+            logger.error(message)
+            raise ValueError(message)
+        if self.color is None:
+            message = "Missing required attribute [color: Tuple[int, int, int]] in ThingConfiguration."
+            logger.error(message)
+            raise ValueError(message)
+        if not isinstance(self.color, tuple):
+            message = "Invalid type for attribute [color: Tuple[int, int, int]] in ThingConfiguration."
+            logger.error(message)
+            raise ValueError(message)
+        if len(self.color) != 3:
+            message = (
+                "Invalid attribute [color: Tuple[int, int, int]] in ThingConfiguration. "
+                "[color: Tuple[int,int, int]] must consist of three integers. "
+            )
+            logger.error(message)
+            raise ValueError(message)
+        if not all(isinstance(value, int) for value in self.color):
+            message = (
+                "Invalid attribute [color: Tuple[int, int, int]] in ThingConfiguration. "
+                "[color: Tuple[int, int, int]] values must be integer."
+            )
             logger.error(message)
             raise ValueError(message)
         if self.x is None:
-            message = "Missing required attribute [x: int] in thing configuration."
+            message = "Missing required attribute [x: int] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(self.x, int):
-            message = "Invalid type for attribute [x: int] in thing configuration."
+            message = "Invalid type for attribute [x: int] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
         if self.y is None:
-            message = "Missing required attribute [y: int] in thing configuration."
+            message = "Missing required attribute [y: int] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(self.y, int):
-            message = "Invalid type for attribute [y: int] in thing configuration."
+            message = "Invalid type for attribute [y: int] in ThingConfiguration."
             logger.error(message)
             raise ValueError(message)
 
     @staticmethod
     @trace()
     def build(config: Dict) -> ThingConfiguration:
-        """Build WorldConfiguration from dictionary of configuration data.
+        """Build ThingConfiguration from dictionary of configuration data.
 
         Args:
             config: Dictionary containing configuration data.
@@ -138,25 +163,27 @@ class ThingConfiguration:
         # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
         return ThingConfiguration(
             name=config.get("name", None),
-            symbol=config.get("symbol", None),
+            char=config.get("char", None),
+            color=config.get("color", None),
             x=config.get("x", None),
             y=config.get("y", None),
         )
 
     @trace()
     def copy(self, **attributes: Any) -> ThingConfiguration:
-        """Copy WorldConfiguration state while replacing attributes with new values, and return new immutable instance.
+        """Copy ThingConfiguration state while replacing attributes with new values, and return new immutable instance.
 
         Args:
-            **attributes: New configuration attributes.
+            **attributes: New ThingConfiguration attributes.
 
         Returns:
             An instance of `loudflow.realm.thing.ThingConfiguration`.
         """
         name = attributes.get("name", None) if "name" in attributes.keys() else self.name
-        symbol = attributes.get("symbol", None) if "symbol" in attributes.keys() else self.symbol
+        char = attributes.get("char", None) if "char" in attributes.keys() else self.char
+        color = attributes.get("color", None) if "color" in attributes.keys() else self.color
         x = attributes.get("x", None) if "x" in attributes.keys() else self.x
         y = attributes.get("y", None) if "y" in attributes.keys() else self.y
         # noinspection PyArgumentList
         # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return ThingConfiguration(name=name, symbol=symbol, x=x, y=y)
+        return ThingConfiguration(name=name, char=char, color=color, x=x, y=y)

@@ -35,13 +35,16 @@ from typing import Any, Dict
 from uuid import uuid4
 
 from loguru import logger
+from rx.core import Observer
+from rx.operators import filter
 
-from loudflow.common.decorators import trace
+from loudflow.common.decorators import timer, trace
 from loudflow.realm.display.change import Change
+from loudflow.realm.event.update_event import UpdateEvent
 from loudflow.realm.world.world import World
 
 
-class Display(ABC):
+class Display(Observer):
     """Base display class.
 
     The display in which the world and its occupants may be viewed.
@@ -55,9 +58,11 @@ class Display(ABC):
     @trace()
     def __init__(self, world: World, config: DisplayConfiguration) -> None:
         logger.info("Constructing display...")
+        super().__init__()
         self.id = str(uuid4())
         self.world = world
         self.config = config
+        self.subscription = None
 
     @abstractmethod
     def event_handler(self, event: Any) -> None:
@@ -72,7 +77,8 @@ class Display(ABC):
     @abstractmethod
     def show(self) -> None:
         """Show world in the display."""
-        pass
+        pipe = self.world.events.pipe(filter(lambda event: isinstance(event, UpdateEvent)))
+        self.subscription = pipe.subscribe(self)
 
     @abstractmethod
     def update(self, change: Change) -> None:
@@ -83,6 +89,17 @@ class Display(ABC):
 
         """
         pass
+
+    @trace()
+    @timer()
+    def on_next(self, event: UpdateEvent) -> None:
+        """Handles update events.
+
+        Args:
+            event: Update event.
+
+        """
+        self.update(event.change)
 
 
 @dataclass(frozen=True)  # type: ignore
