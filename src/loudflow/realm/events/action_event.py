@@ -39,12 +39,12 @@ from loudflow.realm.events.event import Event
 
 @dataclass(frozen=True)
 class ActionEvent(Event):
-    """Action event class.
+    """Action events class.
 
-    Immutable dataclass for action event.
+    Immutable dataclass for actions events.
 
     Attributes:
-    action: Action.
+    actions: Action.
 
     """
 
@@ -53,23 +53,23 @@ class ActionEvent(Event):
     def __post_init__(self) -> None:
         super().__post_init__()
         if self.action is None:
-            message = "Missing required attribute [action: Action] in ActionEvent."
+            message = "Missing required attribute [actions: Action] in ActionEvent."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(self.action, Action):
-            message = "Invalid type for attribute [action: Action] in ActionEvent."
+            message = "Invalid type for attribute [actions: Action] in ActionEvent."
             logger.error(message)
             raise ValueError(message)
 
 
 @dataclass(frozen=True)
 class ActionSucceeded(Event):
-    """Action succeeded event class.
+    """Action succeeded events class.
 
-    Immutable dataclass for action succeeded event.
+    Immutable dataclass for actions succeeded events.
 
     Attributes:
-    action_event_id: Action event identifier.
+    action_event_id: Action events identifier.
 
     """
 
@@ -89,12 +89,12 @@ class ActionSucceeded(Event):
 
 @dataclass(frozen=True)
 class ActionFailed(Event):
-    """Action failed event class.
+    """Action failed events class.
 
-    Immutable dataclass for action failed event.
+    Immutable dataclass for actions failed events.
 
     Attributes:
-    action_event_id: Source action event identifier.
+    action_event_id: Source actions events identifier.
 
     """
 
@@ -119,7 +119,7 @@ class ActorDestroyed(ActionFailed):
     """Action failed due to actor destruction.
 
     Attributes:
-    destroyed_by: Identifier of thing which destroyed actor.
+    destroyed_by: Identifier of things which destroyed actor.
 
     """
 
@@ -144,7 +144,7 @@ class ActionBlocked(ActionFailed):
     """Action failed due to blocking.
 
     Attributes:
-    blocked_by: Identifier of thing which blocked action.
+    blocked_by: Identifier of things which blocked actions.
 
     """
 

@@ -110,7 +110,7 @@ class Console(Display):
 
     @trace()
     def update(self) -> None:
-        """Update display."""
+        """Update displays."""
         self.view.clear()
         for thing in self.world.things.values():
             self.view.print(x=thing.x, y=thing.y, string=thing.char, fg=thing.color)

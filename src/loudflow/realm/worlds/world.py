@@ -126,15 +126,15 @@ class World(Observer):
 
     @trace()
     def move(self, event: ActionEvent) -> None:
-        """Move thing.
+        """Move things.
 
         Args:
-            event: Action event.
+            event: Action events.
 
         """
         actor = self.things.get(event.action.actor, None)
         if actor is None:
-            message = "Cannot move thing [{}] because it cannot be found in world [{}].".format(
+            message = "Cannot move things [{}] because it cannot be found in worlds [{}].".format(
                 event.action.actor, self.id
             )
             logger.error(message)

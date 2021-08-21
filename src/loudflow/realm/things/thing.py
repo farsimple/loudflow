@@ -63,60 +63,60 @@ class Thing:
 
     @trace()
     def is_destroyed_by(self, thing: Thing) -> bool:
-        """Can thing be destroyed by thing?
+        """Can things be destroyed by things?
 
         Args:
-            thing: Target thing to destroy.
+            thing: Target things to destroy.
 
         Returns:
-            True if thing can destroy target thing.
+            True if things can destroy target things.
         """
         if thing is None:
-            message = "Missing required argument [thing: Thing] in Thing.is_destroyed_by method."
+            message = "Missing required argument [things: Thing] in Thing.is_destroyed_by method."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(thing, Thing):
-            message = "Invalid type for argument [thing: Thing] in Thing.is_destroyed_by method."
+            message = "Invalid type for argument [things: Thing] in Thing.is_destroyed_by method."
             logger.error(message)
             raise ValueError(message)
         return self.can_be_destroyed and self.kind.lower() in {value.lower() for value in thing.can_destroy}
 
     @trace()
     def destroys(self, thing: Thing) -> bool:
-        """Can thing destroy thing?
+        """Can things destroy things?
 
         Args:
-            thing: Target thing to destroy.
+            thing: Target things to destroy.
 
         Returns:
-            True if thing can destroy target thing.
+            True if things can destroy target things.
         """
         if thing is None:
-            message = "Missing required argument [thing: Thing] in Thing.destroys method."
+            message = "Missing required argument [things: Thing] in Thing.destroys method."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(thing, Thing):
-            message = "Invalid type for argument [thing: Thing] in Thing.destroys method."
+            message = "Invalid type for argument [things: Thing] in Thing.destroys method."
             logger.error(message)
             raise ValueError(message)
         return thing.can_be_destroyed and thing.kind.lower() in {value.lower() for value in self.can_destroy}
 
     @trace()
     def pushes(self, thing: Thing) -> bool:
-        """Can self push thing?
+        """Can self push things?
 
         Args:
             thing: Thing to be pushed.
 
         Returns:
-            True if thing can be pushed.
+            True if things can be pushed.
         """
         if thing is None:
-            message = "Missing required argument [thing: Thing] in Thing.pushes method."
+            message = "Missing required argument [things: Thing] in Thing.pushes method."
             logger.error(message)
             raise ValueError(message)
         if not isinstance(thing, Thing):
-            message = "Invalid type for argument [thing: Thing] in Thing.pushes method."
+            message = "Invalid type for argument [things: Thing] in Thing.pushes method."
             logger.error(message)
             raise ValueError(message)
         if not self.can_move:

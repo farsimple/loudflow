@@ -39,9 +39,9 @@ from loudflow.realm.events.event import Event
 
 @dataclass(frozen=True)
 class ChangeEvent(Event):
-    """Change event class.
+    """Change events class.
 
-    Immutable dataclass for change event.
+    Immutable dataclass for change events.
 
     Attributes:
     change: Change.
@@ -64,12 +64,12 @@ class ChangeEvent(Event):
 
 @dataclass(frozen=True)
 class ChangeSucceeded(Event):
-    """Change success event class.
+    """Change success events class.
 
-    Immutable dataclass for change succeeded event.
+    Immutable dataclass for change succeeded events.
 
     Attributes:
-    change_event_id: Change event identifier.
+    change_event_id: Change events identifier.
 
     """
 
@@ -89,12 +89,12 @@ class ChangeSucceeded(Event):
 
 @dataclass(frozen=True)
 class ChangeFailed(Event):
-    """Change failed event class.
+    """Change failed events class.
 
-    Immutable dataclass for change failed event.
+    Immutable dataclass for change failed events.
 
     Attributes:
-    change_event_id: Change event identifier.
+    change_event_id: Change events identifier.
 
     """
 

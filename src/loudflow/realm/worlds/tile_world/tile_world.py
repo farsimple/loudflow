@@ -84,18 +84,18 @@ class TileWorld(World):
 
     @trace()
     def start(self) -> None:
-        logger.info("Starting world...")
+        logger.info("Starting worlds...")
         self.subscription = self.actions.subscribe(self)
 
     @trace()
     def stop(self) -> None:
-        logger.info("Stopping world...")
+        logger.info("Stopping worlds...")
         if self.subscription is not None and isinstance(self.subscription, Disposable):
             self.subscription.dispose()
 
     @trace()
     def destroy(self) -> None:
-        logger.info("Destroying world...")
+        logger.info("Destroying worlds...")
         self.things: Dict[str, Thing] = {}
 
     @trace()

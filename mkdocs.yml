@@ -17,23 +17,28 @@ nav:
       - main: loudflow/main-reference.md
       - realm:
         - realm: loudflow/realm/realm-reference.md
-        - action:
-          - action: loudflow/realm/actions/actions-reference.md
+        - actions:
+          - action: loudflow/realm/actions/action-reference.md
           - move: loudflow/realm/actions/move-reference.md
-        - display:
-          - change: loudflow/realm/displays/changes-reference.md
+        - displays:
           - console: loudflow/realm/displays/console-reference.md
-          - display: loudflow/realm/displays/displays-reference.md
+          - display: loudflow/realm/displays/display-reference.md
+        - changes:
+          - change: loudflow/realm/changes/change-reference.md
+          - creation: loudflow/realm/changes/creation-reference.md
+          - destruction: loudflow/realm/changes/destruction-reference.md
+          - movement: loudflow/realm/changes/movement-reference.md
         - event:
-          - action_event: loudflow/realm/events/actions-events-reference.md
-          - event: loudflow/realm/events/events-reference.md
-          - update_event: loudflow/realm/events/update-events-reference.md
+          - action_event: loudflow/realm/events/action-event-reference.md
+          - event: loudflow/realm/events/event-reference.md
+          - change_event: loudflow/realm/events/change-event-reference.md
         - thing:
-          - action: loudflow/realm/things/things-reference.md
+          - thing: loudflow/realm/things/thing-reference.md
         - world:
-          - world: loudflow/realm/worlds/worlds-reference.md
+          - world: loudflow/realm/worlds/world-reference.md
       - common:
         - decorators: loudflow/common/decorators-reference.md
+        - helpers: loudflow/common/helpers-reference.md
 
 # Theme
 theme:
@@ -53,7 +58,12 @@ theme:
 # Plugins
 plugins:
   - git-revision-date
-  - mkdocstrings
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_if_no_docstring: True
   - search
 
 # Extensions

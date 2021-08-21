@@ -17,6 +17,7 @@ tcod = "^12.7.2"
 Rx = "^3.2.0"
 miniKanren = "^1.0.1"
 wonderwords = "^2.2.0"
+networkx = "^2.6.2"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"

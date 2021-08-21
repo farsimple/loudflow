@@ -31,7 +31,7 @@ from loudflow.common.helpers import FromStringEnum
 
 
 class ThingKind(FromStringEnum):
-    """Tileworld thing kind enum."""
+    """Tileworld things kind enum."""
 
     AGENT = 0
     HOLE = 1
