@@ -32,8 +32,8 @@ from __future__ import annotations
 from loguru import logger
 
 from loudflow.common.decorators import trace
-from loudflow.realm.display.console import Console, ConsoleConfiguration
-from loudflow.realm.world.tile_world import TileWorld, TileWorldConfiguration
+from loudflow.realm.displays.console import Console, ConsoleConfiguration
+from loudflow.realm.worlds.tile_world.tile_world import TileWorld, TileWorldConfiguration
 
 
 class Realm:
@@ -48,7 +48,7 @@ class Realm:
         super().__init__()
         config = TileWorldConfiguration(name="test", width=80, height=50, obstacles=0.05, holes=0.001)
         self.world = TileWorld(config)
-        display_config = ConsoleConfiguration(player=self.world.player.id)
+        display_config = ConsoleConfiguration(player=self.world.agent.id)
         self.display = Console(self.world, display_config)
 
     @trace()

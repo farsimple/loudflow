@@ -26,34 +26,37 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
-from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, Optional, TypeVar
 
-from loudflow.realm.worlds.world import WorldConfiguration
+ActionEvent = TypeVar("ActionEvent")
+Thing = TypeVar("Thing")
 
+class TileWorld:
+    def __init__(self, config: TileWorldConfiguration) -> None:
+        self.id = ...
+        self.config = ...
+        self.name = ...
+        self.width = ...
+        self.height = ...
+        self.things = ...
+        self.agent = ...
+        ...
+    def add(self, thing: Thing, replace: bool = True, silent: bool = True) -> bool: ...
+    def remove(self, thing_id: str) -> None: ...
+    def move(self, thing_id: str, x: int, y: int) -> None: ...
+    def on_next(self, event: ActionEvent) -> None: ...
+    def _random_name(self, kind: str) -> str: ...
 
 @dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
+class TileWorldConfiguration:
+    name: str
+    width: Optional[int]
+    height: Optional[int]
+    obstacles: Optional[float]
+    holes: Optional[float]
+    def __post_init__(self) -> None: ...
     @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+    def build(config: Dict) -> TileWorldConfiguration: ...
+    def copy(self, **attributes: Any) -> TileWorldConfiguration: ...

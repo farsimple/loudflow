@@ -26,34 +26,20 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
+
 from __future__ import annotations
 
+from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Dict
-
-from loudflow.realm.worlds.world import WorldConfiguration
+from uuid import uuid4
 
 
-@dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
+@dataclass(frozen=True)  # type: ignore
+class Event(ABC):
+    """Event class.
+
+    Immutable dataclass for events data.
+    """
+
     def __post_init__(self) -> None:
-        super().__post_init__()
-
-    @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+        object.__setattr__(self, "event_id", str(uuid4()))

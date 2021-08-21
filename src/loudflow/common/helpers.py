@@ -26,34 +26,46 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict
+from enum import Enum
+from typing import Optional
 
-from loudflow.realm.worlds.world import WorldConfiguration
+from loguru import logger
+from wonderwords import RandomWord
+
+_random_word_generator = RandomWord()
 
 
-@dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
+class FromStringEnum(Enum):
     @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
+    def default() -> Optional[FromStringEnum]:
+        return None
 
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
+    @classmethod
+    def from_string(cls, name: str) -> FromStringEnum:
+        """Map string to enum value.
+
+        Returns:
+        Enum value.
+        """
+        for key, value in cls.__members__.items():
+            if key == name.upper():
+                return value
+        default = cls.default()
+        if default:
+            return default
+        else:
+            error = ValueError("Name {} does not match any valid {} enum value.".format(name, cls))
+            logger.error(repr(error))
+            raise error
 
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+def random_adjective() -> str:
+    """Generate random adjective.
+
+    Returns:
+        A random adjective.
+    """
+    return _random_word_generator.word(include_categories=["adjectives"]).lower().capitalize()

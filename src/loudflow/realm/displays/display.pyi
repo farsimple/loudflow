@@ -26,34 +26,28 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
-from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Any, Dict, TypeVar
 
-from loudflow.realm.worlds.world import WorldConfiguration
+from rx.core import Observer
 
+World = TypeVar("World")
+Change = TypeVar("Change")
+
+class Display(Observer):
+    def __init__(self, world: World, config: DisplayConfiguration) -> None:
+        self.id = ...
+        self.world = ...
+        self.config = ...
+        self.subscription = ...
+        ...
+    def event_handler(self, event: Any) -> None: ...
+    def show(self) -> None: ...
+    def update(self) -> None: ...
 
 @dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
+class DisplayConfiguration:
     @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+    def build(config: Dict) -> DisplayConfiguration: ...
+    def copy(self, **attributes: Any) -> DisplayConfiguration: ...

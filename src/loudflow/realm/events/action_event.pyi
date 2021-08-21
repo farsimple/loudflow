@@ -26,34 +26,45 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
-from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
+from typing import Generic, TypeVar
 
-from loudflow.realm.worlds.world import WorldConfiguration
-
+Action = TypeVar("Action")
 
 @dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
-    def __post_init__(self) -> None:
-        super().__post_init__()
+class ActionEvent(Generic[Action]):
+    event_id: str = ...
+    action: Action = ...
+    def __post_init__(self) -> None: ...
 
-    @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
+@dataclass(frozen=True)
+class ActionSucceeded:
+    event_id: str = ...
+    action_event_id: str = ...
+    def __post_init__(self) -> None: ...
 
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
+@dataclass(frozen=True)
+class ActionFailed:
+    event_id: str = ...
+    action_event_id: str = ...
+    def __post_init__(self) -> None: ...
 
+@dataclass(frozen=True)
+class ActorDestroyed:
+    event_id: str = ...
+    action_event_id: str = ...
+    destroyed_by: str = ...
+    def __post_init__(self) -> None: ...
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+@dataclass(frozen=True)
+class ActionBlocked:
+    event_id: str = ...
+    action_event_id: str = ...
+    blocked_by: str = ...
+    def __post_init__(self) -> None: ...
+
+@dataclass(frozen=True)
+class ActionNotAllowed:
+    event_id: str = ...
+    action_event_id: str = ...

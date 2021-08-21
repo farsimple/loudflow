@@ -11,10 +11,12 @@ homepage = "https://github.com/farsimple/loudflow"
 main = "loudflow.main:main"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 loguru = "^0.5.3"
 tcod = "^12.7.2"
 Rx = "^3.2.0"
+miniKanren = "^1.0.1"
+wonderwords = "^2.2.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
@@ -45,6 +47,7 @@ known_first_party = "loudflow"
 src_paths = ["src", "tests"]
 
 [tool.mypy]
+files = ["src"]
 check_untyped_defs = true
 disallow_incomplete_defs = true
 disallow_untyped_defs = true

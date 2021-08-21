@@ -14,7 +14,7 @@
 #  and associated documentation files (the "Software"), to deal in the Software without restriction,
 #  including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense,
 #  and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so,
-#  subject to the following conditions:
+#  actor to the following conditions:
 #
 #  The above copyright notice and this permission notice shall be included
 #  in all copies or substantial portions of the Software.
@@ -26,34 +26,34 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
+
 from __future__ import annotations
 
+from abc import ABC
 from dataclasses import dataclass
-from typing import Any, Dict
 
-from loudflow.realm.worlds.world import WorldConfiguration
+from loguru import logger
 
 
-@dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
+@dataclass(frozen=True)  # type: ignore
+class Action(ABC):
+    """Action class.
+
+    Immutable dataclass describing actions.
+
+    Attributes:
+    actor: Identifier of things which performs the actions.
+
+    """
+
+    actor: str
+
     def __post_init__(self) -> None:
-        super().__post_init__()
-
-    @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+        if self.actor is None:
+            message = "Missing required attribute [actor: str] in Action."
+            logger.error(message)
+            raise ValueError(message)
+        if not isinstance(self.actor, str):
+            message = "Invalid type for attribute [actor: str] in Action."
+            logger.error(message)
+            raise ValueError(message)

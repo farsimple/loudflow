@@ -26,34 +26,34 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
+
 from __future__ import annotations
 
-from dataclasses import dataclass
-from typing import Any, Dict
+from loguru import logger
 
-from loudflow.realm.worlds.world import WorldConfiguration
-
-
-@dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
-    def __post_init__(self) -> None:
-        super().__post_init__()
-
-    @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
+from loudflow.common.decorators import trace
+from loudflow.realm.things.thing import Thing, ThingConfiguration
+from loudflow.realm.worlds.tile_world.thing_kind import ThingKind
 
 
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+class Hole(Thing):
+    """Hole things class.
+
+    Holes populating the tileworld.
+    """
+
+    @trace()
+    def __init__(self, name: str, x: int, y: int) -> None:
+        logger.info("Constructing hole...")
+        config = ThingConfiguration(
+            kind=ThingKind.HOLE.name,
+            name=name,
+            x=x,
+            y=y,
+            char="O",
+            color=(0, 255, 0),
+            can_move=False,
+            can_be_destroyed=False,
+            can_destroy={"agent", "tile"},
+        )
+        super().__init__(config)

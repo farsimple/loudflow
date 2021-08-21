@@ -26,34 +26,46 @@
 #  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
 #  THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #  ********************************************************************************
+
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Any, Dict
 
-from loudflow.realm.worlds.world import WorldConfiguration
+from loguru import logger
+
+from loudflow.realm.actions.action import Action
 
 
 @dataclass(frozen=True)
-class DummyWorldConfiguration(WorldConfiguration):
+class Move(Action):
+    """Move actions class.
+
+    Immutable dataclass for move actions.
+
+    Attributes:
+    x: Incremental movement in x-direction.
+    y: Incremental movement in y-direction.
+
+    """
+
+    dx: int
+    dy: int
+
     def __post_init__(self) -> None:
         super().__post_init__()
-
-    @staticmethod
-    def build(config: Dict) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-    def copy(self, **attributes: Any) -> DummyWorldConfiguration:
-        # noinspection PyArgumentList
-        # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-        return DummyWorldConfiguration(name="test", width=80, height=50)
-
-
-def test_constructor() -> None:
-    name = "test"
-    # noinspection PyArgumentList
-    # TODO: Remove noinspection after pycharm bug is fixed for incorrect unexpected argument warning for dataclasses
-    config = DummyWorldConfiguration(name="test", width=80, height=50)
-    assert config.name == name
+        if self.dx is None:
+            message = "Missing required attribute [dx: int] in Move."
+            logger.error(message)
+            raise ValueError(message)
+        if not isinstance(self.dx, int):
+            message = "Invalid type for attribute [dx: int] in Move."
+            logger.error(message)
+            raise ValueError(message)
+        if self.dy is None:
+            message = "Missing required attribute [dy: int] in Move."
+            logger.error(message)
+            raise ValueError(message)
+        if not isinstance(self.dy, int):
+            message = "Invalid type for attribute [dy: int] in Move."
+            logger.error(message)
+            raise ValueError(message)

@@ -31,7 +31,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Dict
 
-from loudflow.realm.world.world import World, WorldConfiguration
+from loudflow.realm.worlds.world import World, WorldConfiguration
 
 
 @dataclass(frozen=True)

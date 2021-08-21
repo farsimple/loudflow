@@ -18,20 +18,20 @@ nav:
       - realm:
         - realm: loudflow/realm/realm-reference.md
         - action:
-          - action: loudflow/realm/action/action-reference.md
-          - move: loudflow/realm/action/move-reference.md
+          - action: loudflow/realm/actions/actions-reference.md
+          - move: loudflow/realm/actions/move-reference.md
         - display:
-          - change: loudflow/realm/display/change-reference.md
-          - console: loudflow/realm/display/console-reference.md
-          - display: loudflow/realm/display/display-reference.md
+          - change: loudflow/realm/displays/changes-reference.md
+          - console: loudflow/realm/displays/console-reference.md
+          - display: loudflow/realm/displays/displays-reference.md
         - event:
-          - action_event: loudflow/realm/event/action-event-reference.md
-          - event: loudflow/realm/event/event-reference.md
-          - update_event: loudflow/realm/event/update-event-reference.md
+          - action_event: loudflow/realm/events/actions-events-reference.md
+          - event: loudflow/realm/events/events-reference.md
+          - update_event: loudflow/realm/events/update-events-reference.md
         - thing:
-          - action: loudflow/realm/thing/thing-reference.md
+          - action: loudflow/realm/things/things-reference.md
         - world:
-          - world: loudflow/realm/world/world-reference.md
+          - world: loudflow/realm/worlds/worlds-reference.md
       - common:
         - decorators: loudflow/common/decorators-reference.md
 
